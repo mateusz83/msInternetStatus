@@ -1,13 +1,9 @@
 # msInternetStatus
 
-Short:        Internet status monitor (+src)
-Author:       mateuszstaniszew(at)wp.pl (Mateusz Staniszew)
-Uploader:     mateuszstaniszew(at)wp.pl (Mateusz Staniszew)
-Type:         comm/net
-Version:      0.1
-Architecture: m68k-amigaos
-Date:         2023-05-11
-
+---------------------------
+--- Available on Aminet ---
+---------------------------
+http://
 
 ----------------
 --- Overview ---
@@ -220,13 +216,5 @@ msInternetStatus was successfully tested with:
 - X-Surf 100 card with AmiTCP TCP/IP stack
 - V1200 card with Roadshow TCP/IP stack
 - WinUAE
-
-
--------------------
---- Source code ---
--------------------
-
-The source code can be found at: https://github.com/mateusz83
-
 
 
