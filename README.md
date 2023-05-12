@@ -3,7 +3,7 @@
 ---------------------------
 --- Available on Aminet ---
 ---------------------------
-http://
+http://aminet.net/package/comm/net/msInternetStatus
 
 ----------------
 --- Overview ---
