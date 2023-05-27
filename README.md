@@ -218,4 +218,16 @@ msInternetStatus was successfully tested with:
 - WinUAE
 
 
+-------------------
+--- History log ---
+-------------------
+
+v0.2
+- better compatibility with AmiTCP and EasyNET.
+
+v0.1
+- initial release
+
+
+
 ``
