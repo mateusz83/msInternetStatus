@@ -1,4 +1,4 @@
-# msInternetStatus
+# msInternetStatus (v0.2)
 
 ---------------------------
 --- Available on Aminet ---
