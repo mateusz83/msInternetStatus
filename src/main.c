@@ -36,9 +36,12 @@
 
 // Application name and version.
 #define   APP_NAME            "msIntenetStatus"
-#define   APP_VERSION         "v0.1"
+#define   APP_VERSION         "v0.2"
 #define   APP_DESCRIPTION     "Checks Internet connection status."   
 #define   APP_ENV_NAME        "msInternetStatus"
+
+// Setting bsdsocket version to 3, if 4 some TCP/IP stacks like EasyNet wont work.
+#define   APP_BSDSOCKET_LIB_VERSION     3
 
 // Version that appears in Icon->Information.
 static const char  *APP_info_version =	"$VER: Version "APP_VERSION;
@@ -353,13 +356,21 @@ BYTE Test_Connection_Socket(LONG _ip_converted, BYTE *_ip_status)
 BYTE Test_Connection(void)
 {
      // Try open socket library.
-     SocketBase = (struct Library*)OpenLibrary("bsdsocket.library", 4);
+     SocketBase = (struct Library*)OpenLibrary("bsdsocket.library", APP_BSDSOCKET_LIB_VERSION);
 	if (SocketBase == NULL) 
           return 0;
 
      // Connection status.
      APP_primary_ip_status = IP_STATUS_NOT_USED;
      APP_secondary_ip_status = IP_STATUS_NOT_USED;
+
+     // Trying primary IP.
+     APP_primary_ip_converted = inet_addr(arg_primary_ip);
+     if (APP_primary_ip_converted == INADDR_NONE) 
+     {
+          APP_primary_ip_converted = inet_addr(DEF_PRIMARY_IP);
+          strcpy(arg_primary_ip, DEF_PRIMARY_IP);
+     }
 
      if (Test_Connection_Socket(APP_primary_ip_converted, &APP_primary_ip_status))
      {
@@ -368,6 +379,14 @@ BYTE Test_Connection(void)
      }
      else
      {
+          // Primary IP failed - testing secondary IP.
+          APP_secondary_ip_converted = inet_addr(arg_secondary_ip);
+          if (APP_secondary_ip_converted == INADDR_NONE)
+          {
+               APP_secondary_ip_converted = inet_addr(DEF_SECONDARY_IP);
+               strcpy(arg_secondary_ip, DEF_SECONDARY_IP);
+          }
+
           if (Test_Connection_Socket(APP_secondary_ip_converted, &APP_secondary_ip_status))
           {
                CloseLibrary(SocketBase);
@@ -553,34 +572,6 @@ int main(int argc, char **argv)
     
      // Get debug status.
      arg_debug = ArgInt(tool_types_strings, "DEBUG", DEF_DEBUG);
-
-     // Convert input string IP into internet format here - so we dont have to do this every time.
-     // If error while converting - use default values.
-     // We nned to open socket.library for this function.
-     SocketBase = (struct Library*)OpenLibrary("bsdsocket.library", 4);
-	if (SocketBase != NULL) 
-     {
-          APP_primary_ip_converted = inet_addr(arg_primary_ip);
-          if (APP_primary_ip_converted == INADDR_NONE) 
-          {
-               APP_primary_ip_converted = inet_addr(DEF_PRIMARY_IP);
-               strcpy(arg_primary_ip, DEF_PRIMARY_IP);
-          }
-
-          APP_secondary_ip_converted = inet_addr(arg_secondary_ip);
-          if (APP_secondary_ip_converted == INADDR_NONE)
-          {
-               APP_secondary_ip_converted = inet_addr(DEF_SECONDARY_IP);
-               strcpy(arg_secondary_ip, DEF_SECONDARY_IP);
-          }
-     }
-     else
-     {
-          printf("%s: Error! Can't open socket.library.", APP_NAME);
-          Cleanup();
-          return 1;
-     }
-     CloseLibrary(SocketBase);
 
      // Creating the Commodity broker.
 
